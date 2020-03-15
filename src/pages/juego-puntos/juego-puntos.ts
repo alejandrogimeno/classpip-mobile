@@ -29,7 +29,8 @@ opcionesMostrar: OpcionSeleccionada[] = [
   {nombre: 'Todos los juegos', id: 'todosLosJuegos'},
   {nombre: 'Juegos de puntos', id: 'juegosDePuntos'},
   {nombre: 'Juegos de colección', id: 'juegosDeColeccion'},
-  {nombre: 'Juegos de competición', id: 'juegosDeCompeticion'},
+  {nombre: 'Juegos de competición Liga', id: 'juegosDeCompeticionLiga'},
+  {nombre: 'Juegos de competición Fórmula Uno', id: 'juegosDeCompeticionFormulaUno'},
 ];
 
   // Recogemos los tres tipos de juegos que tenemos y las metemos en una lista, tanto activos como inactivos
@@ -48,8 +49,10 @@ opcionesMostrar: OpcionSeleccionada[] = [
   juegosDeColeccionInactivos: any[] = [];
 
   // Separamos entre juegos de competición activos e inactivos
-  juegosDeCompeticionActivos: any[] = [];
-  juegosDeCompeticionInactivos: any[] = [];
+  juegosDeCompeticionLigaActivos: any[] = [];
+  juegosDeCompeticionLigaInactivos: any[] = [];
+  juegosDeCompeticionFormulaUnoActivos: any[] = [];
+  juegosDeCompeticionFormulaUnoInactivos: any[] = [];
 
 
   // HACEMOS DOS LISTAS CON LOS JUEGOS ACTIVOS E INACTIVOS DE LOS TRES TIPOS DE JUEGOS
@@ -111,29 +114,45 @@ opcionesMostrar: OpcionSeleccionada[] = [
           this.juegosDeColeccionInactivos.push(juegos[i]);
         }
       }
-      this.ListaJuegosDeCompeticion();
+      this.ListaJuegosDeCompeticionLiga();
     });
   }
 
 
   // Busca la lista de juego de competicion y la clasifica entre activo e inactivo, y activa la función ListaJuegosTotales
-  ListaJuegosDeCompeticion() {
-    this.http.get<any[]>(this.APIUrlGrupos + '/' + this.grupoId + '/juegoDeCompeticions')
+  ListaJuegosDeCompeticionLiga() {
+    this.http.get<any[]>(this.APIUrlGrupos + '/' + this.grupoId + '/JuegosDeCompeticionLiga')
     .subscribe(juegos => {
-      console.log('He recibido los juegos de competición');
+      console.log('He recibido los juegos de competición Liga');
 
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < juegos.length; i++) {
         if (juegos[i].JuegoActivo === true) {
-          this.juegosDeCompeticionActivos.push(juegos[i]);
+          this.juegosDeCompeticionLigaActivos.push(juegos[i]);
         } else {
-          this.juegosDeCompeticionInactivos.push(juegos[i]);
+          this.juegosDeCompeticionLigaInactivos.push(juegos[i]);
+        }
+      }
+      this.ListaJuegosDeCompeticionFormulaUno();
+    });
+  }
+  ListaJuegosDeCompeticionFormulaUno() {
+    this.http.get<any[]>(this.APIUrlGrupos + '/' + this.grupoId + '/JuegosDeCompeticionFormulaUno')
+    .subscribe(juegos => {
+      console.log('He recibido los juegos de competición Formula Uno');
+      console.log(juegos);
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < juegos.length; i++) {
+        if (juegos[i].JuegoActivo === true) {
+          this.juegosDeCompeticionFormulaUnoActivos.push(juegos[i]);
+          console.log(juegos[i]);
+        } else {
+          this.juegosDeCompeticionFormulaUnoInactivos.push(juegos[i]);
         }
       }
       this.ListaJuegosTotales();
     });
   }
-
 
   // Una vez recibidos los juegos de puntos y colección y clasificados en activos e inactivos, los metemos dentro de la
   // lista total de juegos activos e inactivos
@@ -155,12 +174,20 @@ opcionesMostrar: OpcionSeleccionada[] = [
       this.todosLosJuegosInactivos.push(this.juegosDeColeccionInactivos[i]);
     }
 
-    for (let i = 0; i < (this.juegosDeCompeticionActivos.length); i++ ) {
-      this.todosLosJuegosActivos.push(this.juegosDeCompeticionActivos[i]);
+    for (let i = 0; i < (this.juegosDeCompeticionLigaActivos.length); i++ ) {
+      this.todosLosJuegosActivos.push(this.juegosDeCompeticionLigaActivos[i]);
     }
 
-    for (let i = 0; i < (this.juegosDeCompeticionInactivos.length); i++ ) {
-      this.todosLosJuegosInactivos.push(this.juegosDeCompeticionInactivos[i]);
+    for (let i = 0; i < (this.juegosDeCompeticionLigaInactivos.length); i++ ) {
+      this.todosLosJuegosInactivos.push(this.juegosDeCompeticionLigaInactivos[i]);
+    }
+
+    for (let i = 0; i < (this.juegosDeCompeticionFormulaUnoActivos.length); i++ ) {
+      this.todosLosJuegosActivos.push(this.juegosDeCompeticionFormulaUnoActivos[i]);
+    }
+
+    for (let i = 0; i < (this.juegosDeCompeticionFormulaUnoInactivos.length); i++ ) {
+      this.todosLosJuegosInactivos.push(this.juegosDeCompeticionFormulaUnoInactivos[i]);
     }
 
     // Por defecto al principio mostraremos la lista de todos los juegos, con lo que la lista seleccionada para mostrar
@@ -191,10 +218,16 @@ opcionesMostrar: OpcionSeleccionada[] = [
       this.ListaJuegosSeleccionadoInactivo = this.juegosDeColeccionInactivos;
     }
 
-    if (this.opcionSeleccionada === 'juegosDeCompeticion') {
+    if (this.opcionSeleccionada === 'juegosDeCompeticionLiga') {
 
-      this.ListaJuegosSeleccionadoActivo = this.juegosDeCompeticionActivos;
-      this.ListaJuegosSeleccionadoInactivo = this.juegosDeCompeticionInactivos;
+      this.ListaJuegosSeleccionadoActivo = this.juegosDeCompeticionLigaActivos;
+      this.ListaJuegosSeleccionadoInactivo = this.juegosDeCompeticionLigaInactivos;
+    }
+
+    if (this.opcionSeleccionada === 'juegosDeCompeticionFormulaUno') {
+
+      this.ListaJuegosSeleccionadoActivo = this.juegosDeCompeticionFormulaUnoActivos;
+      this.ListaJuegosSeleccionadoInactivo = this.juegosDeCompeticionFormulaUnoInactivos;
     }
   }
 

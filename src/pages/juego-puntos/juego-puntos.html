@@ -51,7 +51,7 @@
                 entonces aparecerá la alerta de Aviso_no_Juegos_Activos-->
                 <div *ngIf="ListaJuegosSeleccionadoActivo[0];else Aviso_no_juegos_activos">
                     <ion-list style="margin-top: 2%;  margin-bottom:-5% " *ngFor="let juego of ListaJuegosSeleccionadoActivo" (click) = JuegoSeleccionado(juego) >
-                      <h4 class = "Juegosactivos">{{juego.Tipo}}</h4>
+                      <h4 class = "Juegosactivos">{{juego.Tipo}}: {{juego.NombreJuego}}</h4>
                       <p class = "AvisoNoJuegosActivo"> {{juego.Modo}} </p>
                     </ion-list>
                   </div>
@@ -81,7 +81,7 @@
                 entonces aparecerá la alerta de Aviso_no_Juegos_inactivos-->
                 <div *ngIf="ListaJuegosSeleccionadoInactivo[0];else Aviso_no_juegos_inactivos">
                     <ion-list style="margin-top: 2%; margin-bottom:-5% " *ngFor="let juego of ListaJuegosSeleccionadoInactivo">
-                      <h3 class = "JuegosInactivos" ion-line>{{juego.Tipo}}</h3>
+                      <h3 class = "JuegosInactivos" ion-line>{{juego.Tipo}}: {{juego.NombreJuego}}</h3>
                       <p class = "AvisoNoJuegosActivo" ion-line> {{juego.Modo}} </p>
                     </ion-list>
                   </div>
