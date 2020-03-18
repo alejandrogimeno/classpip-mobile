@@ -1,0 +1,41 @@
+page-info-juego-Liga {
+
+               //*************Paneles con comentarios sobre pantallas*************//
+
+//Se define los parametros esteticos del pequeño texto explicativo de la pantalla y además se
+//define los valores "b" que son los parametros para texto en negrita.
+
+  .InformacionPantalla{
+        font-size: 14px;
+        line-height: 1.5;
+        color:  rgb(38, 39, 39);
+        margin-right: 2%;
+        margin-top:-2%;
+        margin-bottom:6%;
+        margin-left: 8%;
+
+        b {
+          color: map-get($colors, primary);
+        }
+  }
+
+//Se define los parametros esteticos del pequeño texto explicativo sobre los puntos existentes.
+  #InformacionPuntos{
+        margin-left:5%;
+        margin-right:5%;
+        margin-top:-16%;
+        text-align: justify;
+        color: black;
+        font-size:4.2vw;
+
+  }
+
+//Se define el contenedor donde se almacena el seleccionador de puntos o niveles y el texto informativo.
+  .contenedorInformacion{
+        height: 27%;
+        box-shadow: 0px 3px 6px 0px map-get($colors, primary);
+        margin-bottom:5%;
+        background-color: white;
+  }
+
+}

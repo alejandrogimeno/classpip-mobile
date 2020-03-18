@@ -1,0 +1,109 @@
+<!--Se definen los elementos que aparecerán en la cabecera de la pantalla de la aplicación-->
+<ion-header>
+
+    <!--CABECERA SUPERIOR ( JUNTO A MENU LATERAL )-->
+    <form class="ClasspipCabecera" >
+      <button ion-button menuToggle >
+        <ion-icon name="menu" ></ion-icon>
+      </button>
+      <img src="../../assets/icon/Icono Classpip.png">
+      <h2 style="color:white">Classpip</h2>
+    </form>
+
+    <!--CABECERA INFERIOR (PERMITIRA RETROCEDER A LAS PANTALLAS ANTERIORES mediante un NavBar)-->
+    <div color="azulcabecera">
+      <ion-navbar color="azulcabecera" swipeBackEnabled="false">
+          <ion-title>INFORMACIÓN</ion-title>
+      </ion-navbar>
+    </div>
+
+</ion-header>
+
+
+
+<ion-content class="fondoDegradado">
+
+    <!--Se define un seleccionador de opciones , puedes escoger entre Puntos o
+    Niveles, de esa manera se asigna un value para mostrar posteriormente un contenido u
+    otro--><!--Se define las opciones posibles mediante un ion-segment-->
+    <ion-content class="contenedorInformacion">
+
+        <div padding>
+            <ion-segment [(ngModel)]="Tipo">
+              <ion-segment-button value="Puntos" >
+                Puntos
+              </ion-segment-button>
+              <ion-segment-button value="Niveles">
+                Niveles
+              </ion-segment-button>
+            </ion-segment>
+        </div>
+
+        <!--Segun el tipo de Asignación que se haya seleccionado, se mostrará un párrafo u otro-->
+        <div [ngSwitch]="Tipo">
+
+            <!--Al poner <b> permitimos que las palabras que esten dentro se visualicen en negrita-->
+            <p class="InformacionPantalla" *ngSwitchCase="'Puntos'">A continuación se muestran <b>los puntos</b> disponibles:</p>
+
+            <p class="InformacionPantalla" *ngSwitchCase="'Niveles'">A continuación se muestran <b>los niveles</b> disponibles:</p>
+
+        </div>
+    </ion-content>
+
+
+    <!--Definimos que se debe de visualizar al hacer click en Puntos o en Niveles-->
+    <div [ngSwitch]="Tipo">
+
+        <ion-list *ngSwitchCase="'Puntos'" >
+
+            <!--Si puntosDelJuego tiene algun valor, entonces me debe enseñar el acordeon
+            sino, deberá saltar el Aviso_no_puntos-->
+            <ion-list *ngIf="puntosDelJuego;else Aviso_no_puntos" >
+
+               <!--Medinate title, se le enviará punto.Nombre y será el titulo que aparecerá
+               en el acordeon generado-->
+                <accordionPuntos *ngFor="let punto of puntosDelJuego" [title]="punto.Nombre">
+                  <!-- Parráfo creado para que inicialmente aparezca un hueco en blanco al expandir el acordeón -->
+                <p><ion-item style="background-color:transparent"></ion-item></p>
+                <p id="InformacionPuntos">{{punto.Descripcion}}</p>
+
+                </accordionPuntos>
+
+            </ion-list>
+
+            <ng-template #Aviso_no_puntos >
+                <label > No hay puntos disponibles</label>
+            </ng-template>
+
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'Niveles'">
+
+              <!--Si nivelesDelJuego tiene algun valor, entonces me debe enseñar la lista
+              sino, deberá saltar el Aviso_no_niveles-->
+              <ion-list padding *ngIf="nivelesDelJuego;else Aviso_no_niveles"  >
+
+                <!--Se definen los niveles que se van a mostrar en distintos items-->
+                <ion-list padding style="margin-top: -5%;background-color: white; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; border-top-left-radius: 20px;; box-shadow: 0px 3px 6px 0px rgb(34, 130, 226) " >
+                    <ion-item *ngFor="let nivel of nivelesDelJuego; let i = index" >
+                      <ion-thumbnail item-start  style="margin-left:-6%" >
+                            <img  *ngIf="imagenesNivel[i]" [src]="imagenesNivel[i]" style="max-width: 100%;" >
+                            <img *ngIf="imagenesNivel[i] === undefined" src="../../assets//imgs/No-Photo-Available.jpg" >
+                      </ion-thumbnail>
+                      <h2 style="color: rgb(34, 130, 226) ; font-style: bold;">{{nivel.Nombre}}</h2>
+                      <p style="color:  rgb(61, 60, 60); font-style: oblique; font-size:4.5vw;" >{{nivel.PrivilegiosDelNivel}}</p>
+                    </ion-item>
+                </ion-list>
+
+              </ion-list>
+
+        </ion-list>
+
+        <ng-template #Aviso_no_niveles >
+            <label > No hay niveles disponibles</label>
+        </ng-template>
+      </div>
+
+
+
+</ion-content>

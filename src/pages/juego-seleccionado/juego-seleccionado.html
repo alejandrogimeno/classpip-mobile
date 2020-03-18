@@ -264,7 +264,7 @@
       los cromos a los que obtas , además de otro botón que permite asignar cromos-->
     <ion-row>
       <ion-col col-6 >
-          <ion-item  class="Informacion" (click) = InformacionLiga(juegoSeleccionado);> Información
+          <ion-item  class="Informacion" (click) = irInformacion(juegoSeleccionado);> Información
               <ion-icon style="color: white; margin-right: 2%;" name="information" item-left ></ion-icon>
           </ion-item>
       </ion-col>
@@ -290,10 +290,10 @@
 
           <!--Se define la cabecera de la tabla que recoge los alumnos del juego-->
           <ion-row class="cabecera" >
-            <ion-col col-3 style="margin-left:-5%">
+            <ion-col col-3 style="margin-top:3%; margin-left:-5%">
               <p >Nombre</p>
             </ion-col>
-            <ion-col col-6 style="margin-left:-8%" >
+            <ion-col col-6 style="margin-top:3%; margin-left:-8%" >
               <p >Apellidos</p>
             </ion-col>
             <ion-col col-3 style="margin-left:-26%">

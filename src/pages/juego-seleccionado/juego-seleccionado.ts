@@ -8,6 +8,7 @@ import { AsignarPuntosPage } from '../asignar-puntos/asignar-puntos';
 import { AsignarCromosPage } from '../asignar-cromos/asignar-cromos';
 import { MisCromosPage } from '../mis-cromos/mis-cromos';
 import { MisCromosActualesPage } from '../mis-cromos-actuales/mis-cromos-actuales';
+import { InfoJuegoLigaPage } from '../info-juego-liga/info-juego-liga';
 
 //Importamos las clases necesarias
 import {TablaAlumnoJuegoDePuntos} from '../../clases/TablaAlumnoJuegoDePuntos';
@@ -23,6 +24,7 @@ import {TablaEquipoJuegoDeCompeticion} from '../../clases/TablaEquipoJuegoDeComp
 import {AlumnoJuegoDeCompeticionLiga} from '../../clases/AlumnoJuegoDeCompeticionLiga';
 import {EquipoJuegoDeCompeticionLiga} from '../../clases/EquipoJuegoDeCompeticionLiga';
 import {InformacionPartidosLiga} from '../../clases/InformacionPartidosLiga';
+import {TablaJornadas} from '../../clases/TablaJornadas';
 
 @IonicPage()
 @Component({
@@ -46,6 +48,7 @@ export class JuegoSeleccionadoPage  {
   itemsAPI: any[];
   coleccion: any;
   listaSeleccionable: any[] = [];
+  JornadasCompeticion: TablaJornadas[] = [];
 
   // Recoge la inscripción de un alumno en el juego ordenada por puntos
   listaAlumnosOrdenadaPorPuntos: any[];
@@ -474,10 +477,14 @@ export class JuegoSeleccionadoPage  {
     console.log ('Accediendo a Información de Juego de Puntos');
     this.navCtrl.push (InfoJuegoPuntosPage,{juego:juego});
     }
-    else{
+    else if (this.juegoSeleccionado.Tipo === 'Juego De Colección') {
     console.log ('Accediendo a Información de Juego de Colecciones');
     this.ColeccionDelJuego();
     this.navCtrl.push (MisCromosPage,{coleccion:this.coleccion});
+    } else if (this.juegoSeleccionado.Tipo === 'Juego De Competición Liga') {
+      console.log ('Accediendo a Información de Juego de Liga');
+      this.JornadasCompeticion = this.DameTablaJornadasLiga(this.juegoSeleccionado, this.jornadas, this.enfrentamientosDelJuego);
+      this.navCtrl.push (InfoJuegoLigaPage,{juego:juego, rankingAlumnoJuegoDeCompeticion: this.rankingAlumnoJuegoDeCompeticion, rankingEquiposJuegoDeCompeticion: this.rankingEquiposJuegoDeCompeticion, jornadas: this.jornadas, JornadasCompeticion: this.JornadasCompeticion});
     }
 }
 
@@ -937,5 +944,46 @@ DameEnfrentamientosDelJuego() {
       }
     }
     return partidosPerdidos;
+  }
+
+  DameTablaJornadasLiga(juegoSeleccionado, jornadas, enfrentamientosJuego: EnfrentamientoLiga[][]) {
+    const TablaJornada: TablaJornadas [] = [];
+    console.log('juego seleccionado:');
+    console.log(juegoSeleccionado);
+    for (let i = 0; i < jornadas.length; i++) {
+      let jornada: Jornada;
+      const jornadaId = jornadas[i].id;
+      jornada = jornadas.filter(res => res.id === jornadaId)[0];
+      const enfrentamientosJornada: EnfrentamientoLiga[] = [];
+      enfrentamientosJuego[i].forEach(enfrentamientoDeLaJornada => {
+        if (enfrentamientoDeLaJornada.JornadaDeCompeticionLigaId === jornadaId) {
+          enfrentamientosJornada.push(enfrentamientoDeLaJornada);
+        }
+      });
+      console.log('Los enfrentamientosJornada con id ' + jornadaId + ' son:');
+      console.log(enfrentamientosJornada);
+      const Disputada: boolean = this.JornadaFinalizadaLiga(jornada, enfrentamientosJornada);
+      TablaJornada[i] = new TablaJornadas (i + 1, jornada.Fecha, jornada.CriterioGanador, jornada.id, undefined, undefined, Disputada);
+    }
+    return TablaJornada;
+  }
+
+  JornadaFinalizadaLiga(jornadaSeleccionada: Jornada, EnfrentamientosJornada: EnfrentamientoLiga[]) {
+    let HayGanador = false;
+    let jornadaFinalizada: boolean;
+    if (jornadaSeleccionada.id === EnfrentamientosJornada[0].JornadaDeCompeticionLigaId) {
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < EnfrentamientosJornada.length; i++) {
+        if (EnfrentamientosJornada[i].Ganador !== undefined) {
+          HayGanador = true;
+        }
+      }
+      if (HayGanador === false) {
+        jornadaFinalizada = false;
+      } else {
+        jornadaFinalizada = true;
+      }
+    }
+    return jornadaFinalizada;
   }
 }
